@@ -19,6 +19,6 @@ jobs:
         run: |
           dotnet pack StripeWatch -c Release 
           cd StripeWatch/bin/Release
-          ls
+          find / -name "*.nupkg"
           dotnet nuget push ./StripeWatch.nupkg
 
