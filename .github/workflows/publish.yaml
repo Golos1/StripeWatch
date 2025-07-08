@@ -21,8 +21,6 @@ jobs:
           release_name: Ubuntu-x64.${{github.run_number}}
           draft: false
           prerelease: false
-      - name: check release directory
-        run: ls ${{ github.workspace }}/publish
       - name: Upload Linux Release
         uses: actions/upload-release-asset@v1
         env:
@@ -53,8 +51,6 @@ jobs:
           release_name: MacOS-arm64.${{github.run_number}}
           draft: false
           prerelease: false
-      - name: check release directory
-        run: ls ${{ github.workspace }}/publish
       - name: Upload MacOS Release
         uses: actions/upload-release-asset@v1
         env:
@@ -85,8 +81,6 @@ jobs:
           release_name: Windows-x64.${{github.run_number}}
           draft: false
           prerelease: false
-      - name: check release directory
-        run: ls ${{ github.workspace }}/publish
       - name: Upload Windows Release
         uses: actions/upload-release-asset@v1
         env:
