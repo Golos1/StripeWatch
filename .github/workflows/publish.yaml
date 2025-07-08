@@ -1,7 +1,8 @@
 on: push
 jobs:
   build:
-    runs-on:  ubuntu-latest
+    strategy:
+      runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -15,9 +16,8 @@ jobs:
           dotnet-version: 9.0.x
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_KEY}}
-      - run: dotnet build --configuration Release StripeWatch
       - name: Publish
-        run: dotnet publish --configuration Release --self-contained --no-build --output ./publish
+        run: dotnet publish --configuration Release --self-contained true -p:PublishSingleFile=true -o ${{ github.workspace }}/publish
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -28,7 +28,7 @@ jobs:
           release_name: Release ${{github.ref}}
           draft: false
           prerelease: false
-      - name: Upload Release files
+      - name: Upload Windows Release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{secrets.RELEASE_TOKEN}}
@@ -36,4 +36,13 @@ jobs:
           upload_url: ${{steps.create_release.outputs.upload_url }}
           asset_path: ./publish/StripeWatch.exe
           asset_name: StripeWatch.exe
+          asset_content_type: application/octet-stream
+      - name: Upload Linux/Macos Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.RELEASE_TOKEN}}
+        with:
+          upload_url: ${{steps.create_release.outputs.upload_url }}
+          asset_path: ./publish/StripeWatch
+          asset_name: StripeWatch
           asset_content_type: application/octet-stream
