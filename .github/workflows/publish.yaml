@@ -18,6 +18,7 @@ jobs:
       - name: Build solution and generate NuGet package, then push
         run: |
           cd StripeWatch
-          dotnet pack -c Release -o out  
+          dotnet pack -c Release -o out
+          ls out
           dotnet nuget push ./out/*.nupkg --skip-duplicate --no-symbols true
 
