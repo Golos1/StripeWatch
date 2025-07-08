@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
+        <IsPackable>true</IsPackable>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>dotnet-BudgetWatch-9ffb27fb-711f-4511-8e97-e1ee5d605a1f</UserSecretsId>
