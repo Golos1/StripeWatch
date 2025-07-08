@@ -17,6 +17,7 @@ jobs:
       - name: Publish
         run: dotnet publish --configuration Release --no-build --output ./publish
       - name: Create Release
+        id: create_release
         uses: actions/create-release@v1
         env: 
           GITHUB_TOKEN: ${{secrets.RELEASE_TOKEN}}
