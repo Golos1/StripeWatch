@@ -17,6 +17,23 @@ jobs:
       - name: Create the package.
         run: dotnet pack --configuration Release StripeWatch
       - run: ls 
-      - name: Publish 
+      - name: Push Package 
         run: dotnet nuget push StripeWatch/bin/Release/*.nupkg
-
+      - name: Publish
+        run: dotnet publish --configuration Release --no-build --output ./publish
+      - name: Create Release
+        uses: actions/create-release@v1
+        env: 
+          GITHUB_TOKEN: ${{secrets.RELEASE_TOKEN}}
+        with:
+          tag_name: ${{github.ref}}
+          release_name: Release ${{github.ref}}
+      - name: Upload Release files
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.RELEASE_TOKEN}}
+        with: 
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./publish
+          asset_name: StripeWatch-${{github.ref}}.zip
+          asset_content_type: application/octet-stream
