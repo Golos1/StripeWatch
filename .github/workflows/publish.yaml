@@ -15,12 +15,9 @@ jobs:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_KEY}}
       - name: Build
         run: dotnet build --configuration Release
-      - name: Build solution and generate NuGet package
+      - name: Build solution and generate NuGet package, then push
         run: |
           cd StripeWatch
           dotnet pack -c Release -o out  
-      - name: Push generated package to GitHub registry
-        run: |
-          cd StripeWatch
-          dotnet nuget push ./StripeWatch/out/*.nupkg --skip-duplicate --no-symbols true
+          dotnet nuget push ./out/*.nupkg --skip-duplicate --no-symbols true
 
