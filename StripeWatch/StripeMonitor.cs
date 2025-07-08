@@ -25,19 +25,19 @@ public class StripeMonitor : BackgroundService
         _logger = logger;
         _configuration = configuration;
     }
+    
 /// <summary>
 /// Sends an AMQP message detailing the minimum and current balance.
 /// </summary>
 /// <param name="amount"></param>
     private void BalanceMessage(long amount)
     {
-        Message message = new Amqp.Message("WARNING: Balance Below minimum. MIN: " +
-                                           _min.ToString(CultureInfo.InvariantCulture) + " BALANCE: " +
-                                           amount.ToString(CultureInfo.InvariantCulture) + " at TIME " +
-                                           DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+        var warning = new {description="WARNING: Balance Below minimum.",minimum=_min,balance=amount,time=DateTime.Now.ToString("yyyy-MM-dd HH:mm")};
+
+        Message message = new Amqp.Message(warning);
         Connection connection = new Connection(new Address(_address));
         Session session = new Session(connection);
-        SenderLink sender = new SenderLink(session, "stripe-watch", "q1");
+        SenderLink sender = new SenderLink(session, "stripe-watch", "stripe-events");
         sender.Send(message); 
         sender.Close();
         session.Close();
@@ -51,13 +51,13 @@ public class StripeMonitor : BackgroundService
         var currentEvents = _stripeClient.V1.Events.ListAsync().Result.ToList();
         Connection connection = new Connection(new Address(_address));
         Session session = new Session(connection);
-        SenderLink sender = new SenderLink(session, "stripe-watch", "q1");
+        SenderLink sender = new SenderLink(session, "stripe-watch", "stripe-events");
         Parallel.ForEach(currentEvents, stripeEvent =>
         {
             if (!_eventMap.ContainsKey(stripeEvent.Id))
             {
                 _eventMap.TryAdd(stripeEvent.Id, stripeEvent);
-                Message message = new Amqp.Message("EVENT: "  + stripeEvent.Type + "\n" + "\t" + stripeEvent.ToJson());
+                Message message = new Amqp.Message( stripeEvent.ToJson());
                 sender.Send(message);
             }
         });
