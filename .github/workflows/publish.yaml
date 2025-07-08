@@ -16,6 +16,7 @@ jobs:
       - run: dotnet build --configuration Release StripeWatch
       - name: Create the package.
         run: dotnet pack --configuration Release StripeWatch
+      - run: ls StripeWatch/bin/Release
       - name: Publish 
-        run: dotnet nuget push ./bin/Release/*.nupkg
+        run: dotnet nuget push StripeWatch/bin/Release/*.nupkg
 
