@@ -13,11 +13,9 @@ jobs:
           dotnet-version: 9.0.x
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_KEY}}
-      - name: Build
-        run: dotnet build --configuration Release
-      - name: Build solution and generate NuGet package, then push
-        run: |
-          dotnet pack StripeWatch -c Release 
-          find ~/ -name "*.nupkg"
-          dotnet nuget push ./StripeWatch.nupkg
+      - run: dotnet build --configuration Release
+      - name: Create the package.
+        run: dotnet pack -c Release StripeWatch
+      - name: Publish 
+        run: dotnet nuget push ./StripeWatch.nupkg
 
