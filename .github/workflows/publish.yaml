@@ -27,13 +27,15 @@ jobs:
           release_name: Release ${{github.ref}}-${{github.run_number}}
           draft: false
           prerelease: false
+      - name: check release directory
+        run: ls ${{ github.workspace }}/publish
       - name: Upload Windows Release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{secrets.RELEASE_TOKEN}}
         with: 
           upload_url: ${{steps.create_release.outputs.upload_url }}
-          asset_path: ./publish/StripeWatch.exe
+          asset_path: ${{ github.workspace }}/publish/StripeWatch.exe
           asset_name: StripeWatch.exe
           asset_content_type: application/octet-stream
       - name: Upload Linux/Macos Release
@@ -42,6 +44,6 @@ jobs:
           GITHUB_TOKEN: ${{secrets.RELEASE_TOKEN}}
         with:
           upload_url: ${{steps.create_release.outputs.upload_url }}
-          asset_path: ./publish/StripeWatch
+          asset_path: ${{ github.workspace }}/publish/StripeWatch
           asset_name: StripeWatch
           asset_content_type: application/octet-stream
