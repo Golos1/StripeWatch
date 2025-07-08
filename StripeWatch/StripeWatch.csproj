@@ -7,7 +7,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>dotnet-BudgetWatch-9ffb27fb-711f-4511-8e97-e1ee5d605a1f</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <Version>1.0.3</Version>
+        <VersionPrefix>1.0.4</VersionPrefix>
+        <VersionSuffix>beta</VersionSuffix>
+        <RuntimeIdentifiers>win-x64;win-x86;win-arm64;osx-x64;osx-arm64;linux-x64</RuntimeIdentifiers>
     </PropertyGroup>
 
     <ItemGroup>
