@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Globalization;
+using System.Text.Json;
 using Stripe;
 using Amqp;
 using Address = Amqp.Address;
@@ -32,9 +33,9 @@ public class StripeMonitor : BackgroundService
 /// <param name="amount"></param>
     private void BalanceMessage(long amount)
     {
-        var warning = new {description="WARNING: Balance Below minimum.",minimum=_min,balance=amount,time=DateTime.Now.ToString("yyyy-MM-dd HH:mm")};
+        var warning = new {description="WARNING: Balance Below minimum.",minimum=_min.ToString(CultureInfo.InvariantCulture),balance=amount.ToString(CultureInfo.InvariantCulture),time=DateTime.Now.ToString("yyyy-MM-dd HH:mm")};
 
-        Message message = new Amqp.Message(warning);
+        Message message = new Amqp.Message(JsonSerializer.Serialize(warning));
         Connection connection = new Connection(new Address(_address));
         Session session = new Session(connection);
         SenderLink sender = new SenderLink(session, "stripe-watch", "stripe-events");
@@ -146,7 +147,7 @@ public class StripeMonitor : BackgroundService
                 }
             }
             EventsMessages();
-            await Task.Delay(1000, stoppingToken);
+            await Task.Delay(10000, stoppingToken);
         }
     }
 }
