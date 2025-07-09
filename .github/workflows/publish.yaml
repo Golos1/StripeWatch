@@ -91,3 +91,6 @@ jobs:
           asset_path: ${{ github.workspace }}/publish/StripeWatch.exe
           asset_name: StripeWatch.exe
           asset_content_type: application/octet-stream
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
