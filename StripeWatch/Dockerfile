@@ -5,8 +5,9 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["StripeWatch/StripeWatch.csproj", "StripeWatch/"]
+COPY ["StripeWatch.csproj", "StripeWatch/"]
 RUN dotnet restore "StripeWatch/StripeWatch.csproj"
+WORKDIR "/src/StripeWatch"
 COPY . .
 WORKDIR "/src/StripeWatch"
 RUN dotnet build "StripeWatch.csproj" -c $BUILD_CONFIGURATION -o /app/build
