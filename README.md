@@ -4,7 +4,7 @@ It sends these events as AMQP messages and optionally logs them to a file.
 The messages will be sent to the queue 'stripe-events'.
 
 ## Required Arguments
-1. --stripe-key-file is a path to a file containing a Stripe API secret key.
+1. --stripe-key is a Stripe API secret key.
 2. --amqp is the url of a message broker to send to.
 ## Optional Arguments
 1. --min is the minimum balance for an account, as a double.
