@@ -5,6 +5,7 @@ on:
       - 'master'
 jobs:
   publish_docker:
+    needs: build_for_linux
     runs-on: ubuntu-latest
     permissions:
       packages: write
