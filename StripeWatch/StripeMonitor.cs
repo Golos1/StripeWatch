@@ -147,7 +147,7 @@ public class StripeMonitor : BackgroundService
                 }
             }
             EventsMessages();
-            await Task.Delay(10000, stoppingToken);
+            await Task.Delay(30* 60 *1000, stoppingToken);
         }
     }
 }

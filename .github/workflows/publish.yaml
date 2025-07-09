@@ -4,6 +4,32 @@ on:
     branches:
       - 'master'
 jobs:
+  publish_docker:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+    steps:
+      - id: checkout
+        name: checkout
+        uses: actions/checkout@v4
+      - id: build_image
+        name: build_image
+        run: |
+          cd StripeWatch
+          docker build -t golos1/stripewatch .
+      - id: hub_login
+        name: hub_login
+        uses: docker/login-action@v3
+        with: 
+          username: golos1
+          password: ${{secrets.DOCKER_PASSWORD}}
+      - id: hub_push
+        name: hub_push
+        run: docker push golos1/stripewatch
+
   build_for_linux:
     runs-on: ubuntu-latest
     environment: development
@@ -22,8 +48,8 @@ jobs:
         env: 
           GITHUB_TOKEN: ${{secrets.RELEASE_TOKEN}}
         with:
-          tag_name: Ubuntu-x64.${{github.run_number}}
-          release_name: Ubuntu-x64.${{github.run_number}}
+          tag_name: Ubuntu-x64v.${{vars.VERSION}}
+          release_name: Ubuntu-x64v.${{vars.VERSION}}
           draft: false
           prerelease: false
       - name: Upload Linux Release
@@ -53,8 +79,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.RELEASE_TOKEN}}
         with:
-          tag_name: MacOS-arm64.${{github.run_number}}
-          release_name: MacOS-arm64.${{github.run_number}}
+          tag_name: MacOS-arm64v.${{vars.VERSION}}
+          release_name: MacOS-arm64v.${{vars.VERSION}}
           draft: false
           prerelease: false
       - name: Upload MacOS Release
@@ -84,8 +110,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.RELEASE_TOKEN}}
         with:
-          tag_name: Windows-x64.${{github.run_number}}
-          release_name: Windows-x64.${{github.run_number}}
+          tag_name: Windows-x64v${{vars.VERSION}}
+          release_name: Windows-x64v${{vars.VERSION}}
           draft: false
           prerelease: false
       - name: Upload Windows Release
