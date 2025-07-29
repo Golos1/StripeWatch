@@ -133,6 +133,7 @@ public class StripeMonitor : BackgroundService
         {
             logToFile = false;
         }
+        var minutes = OptionalArgs.ParseMinutes(_logger, _configuration);
         while (!stoppingToken.IsCancellationRequested)
         {
             if (minIsPresent)
@@ -147,7 +148,7 @@ public class StripeMonitor : BackgroundService
                 }
             }
             EventsMessages();
-            await Task.Delay(30* 60 *1000, stoppingToken);
+            await Task.Delay(minutes * 60 *1000, stoppingToken);
         }
     }
 }
